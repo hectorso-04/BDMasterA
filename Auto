@@ -1,0 +1,33 @@
+name: Ejecutar Colab Diariamente
+
+on:
+  schedule:
+    - cron: "0 6 * * *"  # A las 6 AM todos los días
+
+jobs:
+  run_colab:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Instalar dependencias
+        run: pip install selenium
+
+      - name: Ejecutar Colab
+        run: |
+          from selenium import webdriver
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.common.keys import Keys
+          import time
+
+          options = webdriver.ChromeOptions()
+          options.add_argument("--headless")
+          driver = webdriver.Chrome(options=options)
+          
+          driver.get("https://colab.research.google.com/drive/1fL9lKqdYMBPtb1LNBvuVmMxwBOdI4WRN")
+
+          time.sleep(10)
+          ejecutar_btn = driver.find_element(By.XPATH, '//button[contains(text(), "Ejecutar todo")]')
+          ejecutar_btn.click()
+
+          time.sleep(60)  # Espera un minuto
+          driver.quit()
+
